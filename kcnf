@@ -1,0 +1,2 @@
+config PR_LED
+        string "LED"

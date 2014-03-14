@@ -1,0 +1,9 @@
+antares
+build
+*~
+.*.old
+#*#
+*.o
+*.d
+tmp
+
