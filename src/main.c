@@ -2,11 +2,18 @@
 #include <lib/cerebellum/chassis.h>
 #include <lib/cerebellum/stepper.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
 #include <arch/antares.h>
 #include <lib/tmgr.h>
 
+#include <robot/servo.h>
+#include <robot/elevator.h>
+
 #define mmToTicks(mm) ((motor_path_t) (((motor_path_t) (mm) * 480) / 22))
+
+#define GPIO_SHMORGALKA GPC6
+#define GPIO_LIMITER_LEFT GPB6
+#define GPIO_LIMITER_RIGHT GPE6
+#define GPIO_RELAY GPF0
 
 /*
  * PF0 - relay
@@ -15,21 +22,61 @@
  * PC6 - shmorgalka
  */
 
-int main(void)
+ANTARES_INIT_LOW(init_gpio)
 {
-        /* Init background timer */
-        TCCR0B = (1<<CS01)|(1<<CS00);
-        //TCCR0B = (1<<CS02);
-        OCR0A = 250;
-        TIMSK0 |= (1<<OCIE0A);
+        /* init relay */
+        GPIO_INIT_OUT(GPIO_RELAY);
+        GPIO_WRITE_HIGH(GPIO_RELAY);
 
-        GPIO_INIT_OUT(GPB7);
+        /* init sensors */
+        GPIO_INIT_IN(GPIO_LIMITER_LEFT);
+        GPIO_INIT_IN(GPIO_LIMITER_RIGHT);
+        GPIO_INIT_IN(GPIO_SHMORGALKA);
+}
 
+ANTARES_INIT_LOW(init_stepper)
+{
         stepper_init();
-        
         stepper_enable();
+}
 
-        sei();
+ANTARES_INIT_HIGH(init_ready)
+{
+        GPIO_INIT_OUT(GPB0);
+        GPIO_WRITE_LOW(GPB0);
+}
+
+ANTARES_APP(robot)
+{
+        while (GPIO_READ(GPIO_SHMORGALKA));
+
+        servo_write(1, 90);
+        servo_write(2, 90);
+
+        elevator_set_pos(3000);
+
+        tmgr_delay(1000);
+
+        while (1) {
+                servo_write(1, 0);
+                servo_write(2, 0);
+
+                tmgr_delay(1000);
+
+                servo_write(1, 180);
+                servo_write(2, 180);
+
+                tmgr_delay(1000);
+        }
+
+        /*while (1) {
+                elevator_set_pos(5000);
+                tmgr_delay(1000);
+                elevator_set_pos(1000);
+                tmgr_delay(1000);
+        }*/
+
+        while (1);
 
         chassis_write(-20, -20);
         while (chassis_busy())
@@ -81,16 +128,4 @@ int main(void)
                         GPIO_WRITE_HIGH(GPB0);
                 }
         }
-
-        while(1);
-
-        return 0;
-}
-
-ISR(TIMER0_COMPA_vect)
-{
-        GPIO_WRITE_HIGH(GPB7);
-        tmgr_interrupt();
-        chassis_interrupt();
-        GPIO_WRITE_LOW(GPB7);
 }

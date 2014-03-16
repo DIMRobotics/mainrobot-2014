@@ -1,2 +1,2 @@
-config PR_LED
-        string "LED"
+config USE_SERVO
+        bool "Use servo driver"
