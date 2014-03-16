@@ -7,6 +7,7 @@
 
 #include <robot/servo.h>
 #include <robot/elevator.h>
+#include <robot/cannon.h>
 
 #define mmToTicks(mm) ((motor_path_t) (((motor_path_t) (mm) * 480) / 22))
 
@@ -50,12 +51,8 @@ ANTARES_APP(robot)
 {
         while (GPIO_READ(GPIO_SHMORGALKA));
 
-        servo_write(1, 90);
-        servo_write(2, 90);
-
-        elevator_set_pos(3000);
-
-        tmgr_delay(1000);
+        chassis_move(100, 100, 1, 6, mmToTicks(1000));
+        while (1);;
 
         while (1) {
                 servo_write(1, 0);
