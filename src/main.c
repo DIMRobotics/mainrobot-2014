@@ -11,11 +11,6 @@
 
 #define mmToTicks(mm) ((motor_path_t) (((motor_path_t) (mm) * 480) / 22))
 
-#define GPIO_SHMORGALKA GPC6
-#define GPIO_LIMITER_LEFT GPB6
-#define GPIO_LIMITER_RIGHT GPE6
-#define GPIO_RELAY GPF0
-
 /*
  * PF0 - relay
  * PB6 - limiter left
@@ -25,17 +20,86 @@
 
 ANTARES_INIT_LOW(init_stepper)
 {
-        stepper_init();
+        //stepper_init();
         stepper_enable();
 }
 
 ANTARES_APP(robot)
 {
-        while (GPIO_READ(GPIO_SHMORGALKA));
+        while (GPIO_READ(CONFIG_ROBOT_SHMORGALKA));
 
-        chassis_move(100, 100, 1, 6, mmToTicks(1000));
-        while (1);;
+        /* Continious rotation */
+#if 0
+        /* Manipulator test */
+        while (1) {
+                servo_write(1, 0); /* paw */
+                servo_write(2, 30); /* direction */
+                elevator_set_pos(2000);
 
+                GPIO_WRITE_LOW(GPIO_RELAY);
+                tmgr_delay(500);
+
+                elevator_set_pos(1000);
+                servo_write(1, 140);
+                tmgr_delay(1000);
+
+                GPIO_WRITE_HIGH(GPIO_RELAY);
+                tmgr_delay(2000);
+
+                servo_write(1, 0);
+                tmgr_delay(1000);
+                GPIO_WRITE_LOW(GPIO_RELAY);
+                elevator_set_pos(3600);
+                tmgr_delay(500);
+
+                elevator_set_pos(0);
+                servo_write(1, 140);
+                tmgr_delay(1000);
+                GPIO_WRITE_HIGH(GPIO_RELAY);
+                tmgr_delay(2000); /* both fires are at right side */
+
+                servo_write(1, 90);
+                tmgr_delay(500);
+                elevator_reset();
+                tmgr_delay(1000);
+
+                servo_write(1, 140);
+                tmgr_delay(700);
+                elevator_set_pos(500);
+                GPIO_WRITE_LOW(GPIO_RELAY);
+                tmgr_delay(500);
+
+                elevator_reset();
+                servo_write(1, 0);
+                tmgr_delay(500);
+                elevator_set_pos(3000);
+
+                GPIO_WRITE_HIGH(GPIO_RELAY);
+                tmgr_delay(2000);
+
+                elevator_set_pos(1200);
+                servo_write(1, 140);
+                tmgr_delay(1300);
+                GPIO_WRITE_LOW(GPIO_RELAY);
+                elevator_set_pos(2000);
+                tmgr_delay(500);
+                
+                elevator_set_pos(1000);
+                servo_write(1, 0);
+                tmgr_delay(1000);
+
+                GPIO_WRITE_HIGH(GPIO_RELAY);
+                tmgr_delay(2000);
+
+                servo_write(1, 90);
+                tmgr_delay(2000);
+
+                elevator_reset();
+
+                tmgr_delay(3000);
+        }
+
+        /* Servo test */
         while (1) {
                 servo_write(1, 0);
                 servo_write(2, 0);
@@ -48,15 +112,8 @@ ANTARES_APP(robot)
                 tmgr_delay(1000);
         }
 
-        /*while (1) {
-                elevator_set_pos(5000);
-                tmgr_delay(1000);
-                elevator_set_pos(1000);
-                tmgr_delay(1000);
-        }*/
-
         while (1);
-
+#endif
         chassis_write(-20, -20);
         while (chassis_busy())
         {
@@ -71,26 +128,34 @@ ANTARES_APP(robot)
         chassis_move(80, 80, 1, 6, mmToTicks(500));
         while (chassis_busy());;
 
-        chassis_move(-80, 80, 1, 7, mmToTicks(144));
+        chassis_move(-80, 80, 1, 7, mmToTicks(224));
         while(chassis_busy());;
 
-        chassis_move(80, 80, 1, 6, mmToTicks(200));
-        while (chassis_busy());;
+        while (1) {
+                chassis_move(90, 90, 1, 6, mmToTicks(200));
+                while (chassis_busy());;
 
-        chassis_move(-80, 80, 1, 7, mmToTicks(144));
-        while(chassis_busy());;
+                chassis_move(-90, 90, 1, 7, mmToTicks(228) + 5);
+                while(chassis_busy());;
 
-        chassis_move(80, 80, 1, 6, mmToTicks(200));
-        while (chassis_busy());;
+                chassis_move(90, 90, 1, 6, mmToTicks(200));
+                while (chassis_busy());;
 
-        chassis_move(-80, 80, 1, 7, mmToTicks(144));
-        while(chassis_busy());;
+                chassis_move(-90, 90, 1, 7, mmToTicks(228) + 5);
+                while(chassis_busy());;
 
-        chassis_move(80, 80, 1, 6, mmToTicks(200));
-        while (chassis_busy());;
+                chassis_move(90, 90, 1, 6, mmToTicks(200));
+                while (chassis_busy());;
 
-        chassis_move(-80, 80, 1, 7, mmToTicks(144));
-        while(chassis_busy());;
+                chassis_move(-90, 90, 1, 7, mmToTicks(228) + 5);
+                while(chassis_busy());;
+                
+                chassis_move(90, 90, 1, 6, mmToTicks(200));
+                while (chassis_busy());;
+
+                chassis_move(-90, 90, 1, 7, mmToTicks(228) + 5);
+                while(chassis_busy());;
+        }
 
         while (1);;;
 

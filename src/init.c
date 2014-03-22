@@ -2,6 +2,10 @@
 
 #include <lib/cerebellum/gpio.h>
 
+#define GPIO_SHMORGALKA GPC6
+#define GPIO_LIMITER_LEFT GPB6
+#define GPIO_LIMITER_RIGHT GPE6
+#define GPIO_RELAY GPF0
 ANTARES_INIT_LOW(init_gpio)
 {
         /* init relay */

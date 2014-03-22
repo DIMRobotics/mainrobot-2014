@@ -4,8 +4,8 @@
 
 ANTARES_INIT_HIGH(cannon_init)
 {
-        servo_write(3, 90);
-        servo_write(4, 90);
+        servo_write(3, 70);
+        servo_write(4, 110);
 }
 
 void cannon_release(uint8_t cannon)

@@ -5,42 +5,30 @@
 
 #include <arch/antares.h>
 
-#if defined(SERVO4_GPIO)
-#define NUM_SERVO 4
-#elif defined(SERVO3_GPIO)
-#define NUM_SERVO 3
-#elif defined(SERVO2_GPIO)
-#define NUM_SERVO 2
-#elif defined(SERVO1_GPIO)
-#define NUM_SERVO 1
-#else
-#define NUM_SERVO 0
-#endif
-
 static void servo_sort(void);
 
 static volatile struct servo_struct {
         volatile uint8_t i;
         volatile uint16_t value;
         volatile uint16_t next_value;
-} servo_queue[NUM_SERVO];
+} servo_queue[CONFIG_ROBOT_NUM_SERVO];
 
 static volatile uint8_t servo_ready = 0;
 
 ANTARES_INIT_LOW(servo_init)
 {
         /* init servo GPIO to out */
-#ifdef SERVO1_GPIO
-        GPIO_INIT_OUT(SERVO1_GPIO);
+#ifdef CONFIG_ROBOT_SERVO1
+        GPIO_INIT_OUT(CONFIG_ROBOT_SERVO1);
 #endif
-#ifdef SERVO2_GPIO
-        GPIO_INIT_OUT(SERVO2_GPIO);
+#ifdef CONFIG_ROBOT_SERVO2
+        GPIO_INIT_OUT(CONFIG_ROBOT_SERVO2);
 #endif
-#ifdef SERVO3_GPIO
-        GPIO_INIT_OUT(SERVO3_GPIO);
+#ifdef CONFIG_ROBOT_SERVO3
+        GPIO_INIT_OUT(CONFIG_ROBOT_SERVO3);
 #endif
-#ifdef SERVO4_GPIO
-        GPIO_INIT_OUT(SERVO4_GPIO);
+#ifdef CONFIG_ROBOT_SERVO4
+        GPIO_INIT_OUT(CONFIG_ROBOT_SERVO4);
 #endif
 
         /* init base timer */
@@ -49,7 +37,7 @@ ANTARES_INIT_LOW(servo_init)
         TIMSK1 |= (1<<TOIE1)|(1<<OCIE1A); /* one compare vector */
 
         /* clear base structure */
-        for (uint8_t i=0; i<NUM_SERVO; i++) {
+        for (uint8_t i=0; i<CONFIG_ROBOT_NUM_SERVO; i++) {
                 servo_queue[i].i = i+1;
                 servo_queue[i].value = 0;
                 servo_queue[i].next_value = 65535;
@@ -61,7 +49,7 @@ ANTARES_INIT_LOW(servo_init)
 void servo_write_us(uint8_t servo, uint16_t value)
 {
         ANTARES_ATOMIC_BLOCK() {
-                for (uint8_t i=0; i<NUM_SERVO; i++) {
+                for (uint8_t i=0; i<CONFIG_ROBOT_NUM_SERVO; i++) {
                         if (servo_queue[i].i == servo) {
                                 servo_ready = 0;
                                 servo_queue[i].next_value = value >> 2;
@@ -79,15 +67,15 @@ void servo_write(uint8_t servo, uint16_t value)
 
 static void servo_sort(void)
 {
-        for (uint8_t i=0; i<NUM_SERVO; i++) {
+        for (uint8_t i=0; i<CONFIG_ROBOT_NUM_SERVO; i++) {
                 if (servo_queue[i].next_value != 65535) {
                         servo_queue[i].value = servo_queue[i].next_value;
                         servo_queue[i].next_value = 65535;
                 }
         }
 
-        for (uint8_t i=0; i<NUM_SERVO; i++) {
-                for (uint8_t j=i+1; j<NUM_SERVO; j++) {
+        for (uint8_t i=0; i<CONFIG_ROBOT_NUM_SERVO; i++) {
+                for (uint8_t j=i+1; j<CONFIG_ROBOT_NUM_SERVO; j++) {
                         if (servo_queue[i].value > servo_queue[j].value) {
                                 uint16_t v_tmp = servo_queue[i].value;
                                 uint8_t i_tmp = servo_queue[i].i;
@@ -102,21 +90,21 @@ static void servo_sort(void)
 
 static void servo_off(uint8_t servo)
 {
-#ifdef SERVO1_GPIO
+#ifdef CONFIG_ROBOT_SERVO1
         if (servo == 1) 
-                GPIO_WRITE_LOW(SERVO1_GPIO);
+                GPIO_WRITE_LOW(CONFIG_ROBOT_SERVO1);
 #endif
-#ifdef SERVO2_GPIO
+#ifdef CONFIG_ROBOT_SERVO2
         else if (servo == 2) 
-                GPIO_WRITE_LOW(SERVO2_GPIO);
+                GPIO_WRITE_LOW(CONFIG_ROBOT_SERVO2);
 #endif
-#ifdef SERVO3_GPIO
+#ifdef CONFIG_ROBOT_SERVO3
         else if (servo == 3) 
-                GPIO_WRITE_LOW(SERVO3_GPIO);
+                GPIO_WRITE_LOW(CONFIG_ROBOT_SERVO3);
 #endif
-#ifdef SERVO4_GPIO
+#ifdef CONFIG_ROBOT_SERVO4
         else if (servo == 4) 
-                GPIO_WRITE_LOW(SERVO4_GPIO);
+                GPIO_WRITE_LOW(CONFIG_ROBOT_SERVO4);
 #endif
 }
 
@@ -133,18 +121,18 @@ ISR(TIMER1_OVF_vect)
         }
 
         /* Turn all GPIO on */
-        #ifdef SERVO1_GPIO
-                GPIO_WRITE_HIGH(SERVO1_GPIO);
-        #endif
-        #ifdef SERVO2_GPIO
-                GPIO_WRITE_HIGH(SERVO2_GPIO);
-        #endif
-        #ifdef SERVO3_GPIO
-                GPIO_WRITE_HIGH(SERVO3_GPIO);
-        #endif
-        #ifdef SERVO4_GPIO
-                GPIO_WRITE_HIGH(SERVO4_GPIO);
-        #endif
+#ifdef CONFIG_ROBOT_SERVO1
+        GPIO_WRITE_HIGH(CONFIG_ROBOT_SERVO1);
+#endif
+#ifdef CONFIG_ROBOT_SERVO2
+        GPIO_WRITE_HIGH(CONFIG_ROBOT_SERVO2);
+#endif
+#ifdef CONFIG_ROBOT_SERVO3
+        GPIO_WRITE_HIGH(CONFIG_ROBOT_SERVO3);
+#endif
+#ifdef CONFIG_ROBOT_SERVO4
+        GPIO_WRITE_HIGH(CONFIG_ROBOT_SERVO4);
+#endif
 
         index = 0;
         while (servo_queue[index].value == 0) {
@@ -153,7 +141,7 @@ ISR(TIMER1_OVF_vect)
         }
 
         /* this trick is required because TCNT1 could suddenly reach OCR1A */
-        if (index < NUM_SERVO)
+        if (index < CONFIG_ROBOT_NUM_SERVO)
                 OCR1A = servo_queue[index].value;
         else
                 OCR1A = 12500;
@@ -165,17 +153,17 @@ ISR(TIMER1_OVF_vect)
 ISR(TIMER1_COMPA_vect)
 {
         TCCR1B = 0; /* stop timer */
-        if (index == NUM_SERVO + 1) {
+        if (index == CONFIG_ROBOT_NUM_SERVO + 1) {
                 TCNT1 = 65535;
                 TCCR1B = (1<<CS11)|(1<<CS10); /* f_cpu / 64 prescaler */
                 return;
         }
         
         uint16_t ocr = OCR1A;
-        while (index < NUM_SERVO && servo_queue[index].value == ocr)
+        while (index < CONFIG_ROBOT_NUM_SERVO && servo_queue[index].value == ocr)
                 servo_off(servo_queue[index++].i);
         
-        if (index == NUM_SERVO) {
+        if (index == CONFIG_ROBOT_NUM_SERVO) {
                 OCR1A = 12500;
                 index++;
         } else {

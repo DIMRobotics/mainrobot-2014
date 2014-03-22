@@ -1,16 +1,25 @@
 #include <robot/elevator.h>
+#include <robot/servo.h>
 
 #include <lib/cerebellum/stepper.h>
+#include <lib/cerebellum/gpio.h>
 #include <lib/tmgr.h>
 
 #include <arch/antares.h>
 
 #include <util/delay.h>
 
+
 ANTARES_INIT_HIGH(elevator_init)
 {
+        servo_write(1, 0);
+        elevator_reset();
+}
+
+void elevator_reset(void)
+{
         stepper_write(2, 60);
-        _delay_ms(100);
+        while (GPIO_READ(CONFIG_ROBOT_ELEVRESET));;;
         stepper_write(2, 0);
         stepper_reset_path(2);
 }
@@ -27,3 +36,5 @@ void elevator_set_pos(int16_t pos)
         }
         stepper_write(2, 0);
 }
+
+

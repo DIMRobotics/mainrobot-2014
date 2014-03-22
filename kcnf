@@ -1,2 +1,55 @@
 config USE_SERVO
         bool "Use servo driver"
+
+if USE_SERVO
+        config ROBOT_NUM_SERVO
+                int "Number of servo"
+                default 4
+                range 0 6
+
+        menu "Servo connections"
+                if (ROBOT_NUM_SERVO = 1 || ROBOT_NUM_SERVO = 2 || ROBOT_NUM_SERVO = 3 || ROBOT_NUM_SERVO = 4)
+                config ROBOT_SERVO1_Q
+                        string "Servo 1 GPIO"
+                        default "GPD7"
+                endif
+
+                if (ROBOT_NUM_SERVO = 2 || ROBOT_NUM_SERVO = 3 || ROBOT_NUM_SERVO = 4)
+                config ROBOT_SERVO2_Q
+                        string "Servo 2 GPIO"
+                        default "GPD6"
+                endif
+
+                if (ROBOT_NUM_SERVO = 3 || ROBOT_NUM_SERVO = 4)
+                config ROBOT_SERVO3_Q
+                        string "Servo 3 GPIO"
+                        default "GPD4"
+                endif
+
+                if (ROBOT_NUM_SERVO = 4)
+                config ROBOT_SERVO4_Q
+                        string "Servo 4 GPIO"
+                        default "GPD1"
+                endif
+        endmenu
+endif
+
+config ROBOT_LIMITER_LEFT_Q
+        string "Left limiter GPIO"
+        default "GPB6"
+
+config ROBOT_LIMITER_RIGHT_Q
+        string "Right limiter GPIO"
+        default "GPE6"
+
+config ROBOT_SHMORGALKA_Q
+        string "Shmorgalka GPIO"
+        default "GPC6"
+
+config ROBOT_VACUUM_Q
+        string "Vacuum GPIO"
+        default "GPF0"
+
+config ROBOT_ELEVRESET_Q
+        string "Elevator reset GPIO"
+        default "GPD0"

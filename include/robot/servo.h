@@ -3,11 +3,6 @@
 
 #include <lib/cerebellum/gpio.h>
 
-#define SERVO1_GPIO GPD7
-#define SERVO2_GPIO GPD6
-#define SERVO3_GPIO GPD4
-#define SERVO4_GPIO GPD1
-
 #define SERVO_MIN 500
 #define SERVO_MAX 2500
 
