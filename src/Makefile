@@ -1,4 +1,4 @@
-objects-y+=main.o init.o timer.o elevator.o
+objects-y+=main.o init.o timer.o elevator.o uart.o odetect.o
 objects-$(CONFIG_USE_SERVO)+=servo.o cannon.o
 
 cflags-y+=-DCONFIG_ROBOT_LIMITER_LEFT=$(call unquote,$(CONFIG_ROBOT_LIMITER_LEFT_Q))

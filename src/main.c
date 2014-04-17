@@ -4,12 +4,20 @@
 #include <util/delay.h>
 #include <arch/antares.h>
 #include <lib/tmgr.h>
+#include <lib/printk.h>
 
 #include <robot/servo.h>
 #include <robot/elevator.h>
 #include <robot/cannon.h>
+#include <robot/odetect.h>
+#include <robot/uart.h>
 
 #define mmToTicks(mm) ((motor_path_t) (((motor_path_t) (mm) * 480) / 22))
+
+void move(void) 
+{
+#include "move.c"
+}
 
 /*
  * PF0 - relay
@@ -20,13 +28,36 @@
 
 ANTARES_INIT_LOW(init_stepper)
 {
-        //stepper_init();
         stepper_enable();
+}
+
+uint8_t odetect_front(void)
+{
+        //return 0;
+        return odetect_get_state(ODETECT_FRONT | ODETECT_FRIGHT | ODETECT_FLEFT);
 }
 
 ANTARES_APP(robot)
 {
-        while (GPIO_READ(CONFIG_ROBOT_SHMORGALKA));
+        /*cannon_release(CANNON_LEFT);
+        odetect_set_single_limit(ODETECT_FRONT | ODETECT_FRIGHT | ODETECT_FLEFT, 20);
+        chassis_set_interrupt(&odetect_front);
+        chassis_move(50, 50, 1, 5, mmToTicks(500));
+        while (chassis_busy());
+        odetect_set_single_limit(ODETECT_FRONT, 0);
+        cannon_release(CANNON_LEFT);
+
+        odetect_set_single_limit(ODETECT_REAR, 60);
+        while (1) {
+                if (odetect_get_state(ODETECT_REAR)) {
+                        cannon_release(CANNON_LEFT);
+                        cannon_release(CANNON_RIGHT);
+                }
+        }*/
+
+        chassis_set_interrupt(&odetect_front);
+        move();
+        while (1);
 
         /* Continious rotation */
 #if 0

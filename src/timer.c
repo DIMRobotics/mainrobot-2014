@@ -15,8 +15,7 @@ ANTARES_INIT_LOW(maintimer_init)
 
 ISR(TIMER0_COMPA_vect)
 {
-        GPIO_WRITE_HIGH(GPB7);
+        sei();
         tmgr_interrupt();
         chassis_interrupt();
-        GPIO_WRITE_LOW(GPB7);
 }

@@ -147,7 +147,6 @@ ISR(TIMER1_OVF_vect)
                 OCR1A = 12500;
         TCNT1 = 0;
         TCCR1B = (1<<CS11)|(1<<CS10); /* f_cpu / 64 prescaler */
-        
 }
 
 ISR(TIMER1_COMPA_vect)

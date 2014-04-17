@@ -12,7 +12,7 @@
 
 ANTARES_INIT_HIGH(elevator_init)
 {
-        servo_write(1, 0);
+        servo_write(1, 20);
         elevator_reset();
 }
 
