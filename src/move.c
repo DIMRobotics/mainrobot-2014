@@ -50,18 +50,18 @@ GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
 /*!path: 1359.53 */
 chassis_move(100, 100, 1, 7, 29662);
 while (stepper_get_path(1) <= 9600);
-elevator_set_pos(1000); /* move elevator up */
+elevator_set_pos(2200); /* move elevator up */
 servo_write(1, 0); /* arm */
 servo_write(2, 20); /* paw */
 tmgr_delay(300);
-elevator_set_pos(2600);
+elevator_set_pos(2800);
 tmgr_delay(300);
 GPIO_WRITE_HIGH(CONFIG_ROBOT_VACUUM);
 tmgr_delay(300);
-while (chassis_busy());
-
+elevator_set_pos(2400);
 servo_write(1, 90);
 servo_write(2, 125);
+while (chassis_busy());
 
 
 /* rotate to -68.88 degrees (-1.202230 radians) */
@@ -97,13 +97,13 @@ chassis_move(100, -100, 1, 7, 4780);
 servo_write(1, 90);
 servo_write(2, 125);
 tmgr_delay(100);
+elevator_set_pos(4500);
 while (chassis_busy());
 
 
 /* step 4: go 183 mm */
 /*!path: 186.002 */
 chassis_move(50, 50, 1, 7, 4058);
-elevator_set_pos(4500);
 while (chassis_busy());
 
 
@@ -181,7 +181,7 @@ chassis_move(-50, -50, 1, 7, 4058);
 tmgr_delay(300);
 elevator_set_pos(1000);
 servo_write(2, 20);
-elevator_set_pos(0);
+elevator_reset();
 servo_write(1, 150);
 
 tmgr_delay(300);
