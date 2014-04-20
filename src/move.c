@@ -94,21 +94,17 @@ while (chassis_busy());
 /* rotate to 83.68 degrees (1.460540 radians) */
 /*!angle: 1.55385 */
 chassis_move(100, -100, 1, 7, 4780);
-while (chassis_busy()) {
-	/*do something */
-}
-
 servo_write(1, 90);
 servo_write(2, 125);
 tmgr_delay(100);
-elevator_set_pos(4500);
+while (chassis_busy());
+
 
 /* step 4: go 183 mm */
 /*!path: 186.002 */
 chassis_move(50, 50, 1, 7, 4058);
-while (chassis_busy()) { 
-	/* do something */
-}
+elevator_set_pos(4500);
+while (chassis_busy());
 
 
 GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
