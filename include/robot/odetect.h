@@ -16,5 +16,6 @@ void odetect_set_limit(odetect_dir_t dir, uint8_t limit);
 void odetect_set_single_limit(odetect_dir_t dir, uint8_t limit);
 uint8_t odetect_get_state(odetect_dir_t dir);
 void odetect_write_state(odetect_dir_t dir, uint8_t state);
+void odetect_interrupt(void);
 
 #endif
