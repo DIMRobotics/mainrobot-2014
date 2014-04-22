@@ -5,6 +5,7 @@
 #include <lib/tmgr.h>
 #include <lib/cerebellum/gpio.h>
 #include <lib/cerebellum/chassis.h>
+#include <robot/odetect.h>
 
 ANTARES_INIT_LOW(maintimer_init)
 {
@@ -23,7 +24,9 @@ void timer_run(void)
 ISR(TIMER0_COMPA_vect)
 {
         sei();
+        GPIO_WRITE_LOW(GPB0);
         tmgr_interrupt();
+        odetect_interrupt();
         chassis_interrupt();
         if (timer >= 0) {
                 timer--;
@@ -33,4 +36,5 @@ ISR(TIMER0_COMPA_vect)
                         while (1);; /* robot shutdown */
                 }
         }
+        GPIO_WRITE_HIGH(GPB1);
 }
