@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 void elevator_reset(void);
+void elevator_slow_reset(void);
 void elevator_set_pos(int16_t pos);
 
 #endif
