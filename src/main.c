@@ -29,13 +29,19 @@ ANTARES_INIT_LOW(init_stepper)
 }
 
 #define ODETECT_FULLFRONT (ODETECT_FRONT | ODETECT_FRIGHT | ODETECT_FLEFT)
-void move(void) 
+void move_red(void) 
 {
-#include "move.c"
+#include "move_red.c"
+}
+
+void move_yellow(void)
+{
+#include "move_yellow.c"
 }
 
 ANTARES_APP(robot)
 {
+        
         chassis_setup_ebrake(1, 3);
         /*cannon_release(CANNON_LEFT);
         odetect_set_single_limit(ODETECT_FRONT, 15);
@@ -59,7 +65,12 @@ ANTARES_APP(robot)
                 }
         }*/
 
-        move();
+        while (!GPIO_READ(CONFIG_ROBOT_SHMORGALKA));
+        if (GPIO_READ(CONFIG_ROBOT_SELECTOR)) {
+                move_red();
+        } else {
+                move_yellow();
+        }
         while (1);
 
         /* Continious rotation */

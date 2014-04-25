@@ -53,3 +53,7 @@ config ROBOT_VACUUM_Q
 config ROBOT_ELEVRESET_Q
         string "Elevator reset GPIO"
         default "GPD0"
+
+config ROBOT_SELECTOR_Q
+        string "Zone selector switch"
+        default "GPB7"
