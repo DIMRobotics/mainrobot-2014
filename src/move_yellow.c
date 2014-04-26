@@ -131,7 +131,7 @@ while (chassis_busy());
 /* step 4: go 183 mm */
 odetect_set_single_limit(0, 0); /* turn ODetect off for a while */
 /*!path: 44,1833 */
-chassis_move(100 , 100 , 1, 7, 960);
+chassis_move(100 , 100 , 1, 7, 900);
 while (chassis_busy());
 
 
@@ -186,7 +186,7 @@ while (chassis_busy());
 
 odetect_set_single_limit(ODETECT_FULLFRONT, ODETECT_FRONT_DISTANCE);
 /*!path: 384.187 */
-chassis_move(100 , 100 , 1, 7, 8382);
+chassis_move(100 , 100 , 1, 7, 8382 + mmToTicks(30));
 GPIO_WRITE_HIGH(CONFIG_ROBOT_VACUUM);
 tmgr_delay(100);
 elevator_reset();
@@ -202,14 +202,14 @@ elevator_set_pos(3800);
 while (chassis_busy());
 
 /*!path: 45,2833 */
-chassis_move(100 , 100 , 1, 7, 982);
+chassis_move(100 , 100 , 1, 7, 972);
 while (chassis_busy());
 
 GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
-chassis_move(10, 10, 1, 10, mmToTicks(10));
+chassis_move(10, 10, 1, 10, mmToTicks(6));
 while (chassis_busy());
 
-chassis_move(-10, -10, 1, 10, mmToTicks(10));
+chassis_move(-10, -10, 1, 10, mmToTicks(6));
 while (chassis_busy());
 
 odetect_set_single_limit(ODETECT_REAR, ODETECT_REAR_DISTANCE);
@@ -247,8 +247,9 @@ while (chassis_busy()) {
 #endif
 
 odetect_set_single_limit(ODETECT_RIGHT, ODETECT_TURN_DISTANCE);
-chassis_move(-100, 100, 1, 10, 4832);
+chassis_move(-100, 100, 1, 10, 4732);
 servo_write(2, 20);
+tmgr_delay(400);
 elevator_reset();
 servo_write(1, 150);
 while (chassis_busy());
@@ -257,7 +258,7 @@ while (chassis_busy());
 
 odetect_set_single_limit(ODETECT_FRONT | ODETECT_FLEFT, ODETECT_FRONT_DISTANCE);
 /*!path: 1283.62 */
-chassis_move(100 , 100 , 1, 7, 28006);
+chassis_move(100 , 100 , 1, 7, 28006 + mmToTicks(30));
 tmgr_delay(300);
 GPIO_WRITE_HIGH(CONFIG_ROBOT_VACUUM);
 tmgr_delay(100);
@@ -433,7 +434,7 @@ chassis_move(100, -100, 1, 7, 4862);
 while (chassis_busy());
 
 odetect_set_single_limit(ODETECT_FULLFRONT, ODETECT_FRONT_DISTANCE);
-chassis_move(100, 100, 1, 7, mmToTicks(350));
+chassis_move(100, 100, 1, 7, mmToTicks(360));
 while (chassis_busy());
 
 odetect_set_single_limit(ODETECT_RIGHT, ODETECT_TURN_DISTANCE);
@@ -465,7 +466,7 @@ while (chassis_busy()) {
 
 odetect_set_single_limit(ODETECT_REAR, ODETECT_REAR_DISTANCE);
 /*!path: 626.397 */
-chassis_move(100 , 100 , 1, 7, 13667);
+chassis_move(70 , 70, 1, 7, 13567);
 
 elevator_reset();
 servo_write(1, 140);
@@ -509,7 +510,7 @@ GPIO_WRITE_HIGH(CONFIG_ROBOT_VACUUM);
 tmgr_delay(200);
 
 odetect_set_single_limit(ODETECT_REAR, ODETECT_REAR_DISTANCE);
-chassis_move(-80, -80, 1, 7, mmToTicks(230));
+chassis_move(-80, -80, 1, 7, mmToTicks(130));
 servo_write(1, 170);
 elevator_reset();
 while (chassis_busy());
@@ -547,11 +548,12 @@ chassis_move(50 , 50 , 1, 7, 16207);
 #endif
 
 odetect_set_single_limit(ODETECT_RIGHT, ODETECT_TURN_DISTANCE);
-chassis_move(-100, 100, 1, 7, 4862);
+chassis_move(-100, 100, 1, 7, 5062);
 while (chassis_busy());
 
+
 odetect_set_single_limit(0, 0);
-chassis_move(100, 100, 1, 7, mmToTicks(400));
+chassis_move(60, 60, 1, 7, mmToTicks(400));
 servo_write(2, 27);
 tmgr_delay(800);
 elevator_reset();
@@ -560,13 +562,13 @@ while (chassis_busy());
 /* Let's do some magic with candles */
 
 /* First fire is ready */
-servo_write(1, 30);
-tmgr_delay(500);
+servo_write(1, 25);
+tmgr_delay(900);
 
 servo_write(1, 63);
 servo_write(2, 27);
 odetect_set_single_limit(0, 0);
-chassis_move(-30, -30, 1, 7, mmToTicks(40));
+chassis_move(-30, -30, 1, 7, mmToTicks(20));
 while (chassis_busy());
 
 tmgr_delay(300);
@@ -591,7 +593,7 @@ elevator_set_pos(2000);
 while (chassis_busy());
 
 chassis_move(-100, 100, 1, 10, 2500);
-elevator_set_pos(5500);
+elevator_set_pos(5800);
 while (chassis_busy());
 
 chassis_move(20, 20, 1, 10, mmToTicks(50));
@@ -609,7 +611,7 @@ chassis_move(100, -100, 1, 10, 2500);
 elevator_reset();
 while (chassis_busy());
 
-chassis_move(20, 20, 1, 10, mmToTicks(170));
+chassis_move(20, 20, 1, 10, mmToTicks(155));
 servo_write(1, 63);
 servo_write(2, 27);
 tmgr_delay(800);
