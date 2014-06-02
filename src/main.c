@@ -41,7 +41,6 @@ void move_yellow(void)
 
 ANTARES_APP(robot)
 {
-        
         chassis_setup_ebrake(1, 3);
         /*cannon_release(CANNON_LEFT);
         odetect_set_single_limit(ODETECT_FRONT, 15);
@@ -65,7 +64,6 @@ ANTARES_APP(robot)
                 }
         }*/
 
-        while (!GPIO_READ(CONFIG_ROBOT_SHMORGALKA));
         if (GPIO_READ(CONFIG_ROBOT_SELECTOR)) {
                 move_red();
         } else {

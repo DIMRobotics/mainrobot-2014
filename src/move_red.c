@@ -47,6 +47,7 @@ chassis_move(-20, -20, 1, 15, mmToTicks(30));
 while(chassis_busy());
 
 /* wait for shmorgalka to launch */
+while (!GPIO_READ(CONFIG_ROBOT_SHMORGALKA));
 while (GPIO_READ(CONFIG_ROBOT_SHMORGALKA));
 timer_run();
 
