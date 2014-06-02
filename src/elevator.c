@@ -13,7 +13,7 @@
 ANTARES_INIT_HIGH(elevator_init)
 {
         GPIO_INIT_IN_PU(CONFIG_ROBOT_ELEVRESET);
-        servo_write(1, 0);
+        servo_write(1, 30);
         elevator_reset();
 }
 
