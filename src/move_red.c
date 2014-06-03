@@ -252,7 +252,6 @@ tmgr_delay(300);
 
 servo_write(2, 25);
 
-servo_write(2, 25);
 elevator_reset();
 elevator_set_pos(1200);
 servo_write(1, 3);
@@ -295,7 +294,7 @@ elevator_reset();
 servo_write(1, 145);
 servo_write(2, 25);
 tmgr_delay(600);
-elevator_set_pos(200);
+elevator_set_pos(300);
 
 move_backward(100, ROBOT_ACC, 200);
 while (chassis_busy());
