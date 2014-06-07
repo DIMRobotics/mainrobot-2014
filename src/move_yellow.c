@@ -75,7 +75,7 @@ while (chassis_busy());
 
 tmgr_delay(200);
 
-move_forward(50, ROBOT_ACC, 40);
+move_forward(50, ROBOT_ACC, 33);
 GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
 while (chassis_busy());
 
@@ -146,6 +146,7 @@ tmgr_delay(200);
 while (chassis_busy());
 
 move_backward(100, ROBOT_ACC, 250);
+odetect_set_single_limit(0, 0);
 servo_write(1, 75);
 elevator_reset();
 while (chassis_busy());
@@ -162,7 +163,7 @@ tmgr_delay(300);
 
 /* collect fires from fireplace */
 GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
-elevator_set_pos(400);
+elevator_set_pos(800);
 tmgr_delay(200);
 elevator_reset();
 servo_write(1, 0);
@@ -176,7 +177,7 @@ tmgr_delay(300);
 servo_write(1, 75);
 tmgr_delay(800);
 GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
-elevator_set_pos(2000);
+elevator_set_pos(2200);
 tmgr_delay(400);
 elevator_set_pos(300);
 servo_write(1, 155);
@@ -189,7 +190,7 @@ tmgr_delay(300);
 elevator_reset();
 servo_write(1, 75);
 tmgr_delay(300);
-elevator_set_pos(3200);
+elevator_set_pos(3600);
 GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
 tmgr_delay(200);
 elevator_reset();
@@ -219,7 +220,7 @@ elevator_set_pos(600);
 GPIO_WRITE_LOW(CONFIG_ROBOT_VACUUM);
 tmgr_delay(200);
 elevator_reset();
-servo_write(1, 80);
+servo_write(1, 70);
 tmgr_delay(300);
 elevator_set_pos(3000);
 tmgr_delay(200);
@@ -298,7 +299,7 @@ while (chassis_busy());
 rotate_right(100, ROBOT_ACC, 170);
 while (chassis_busy());
 
-move_forward(100, ROBOT_ACC, 1000);
+move_forward(100, ROBOT_ACC, 1070);
 while (chassis_busy());
 
 /* Now we are near central platform */
@@ -327,7 +328,7 @@ tmgr_delay(500);
 elevator_set_pos(2000);
 servo_write(2, 170);
 tmgr_delay(400);
-elevator_set_pos(5800);
+elevator_set_pos(6000);
 move_backward(20, 14, 20);
 while (chassis_busy());
 tmgr_delay(200);
@@ -357,7 +358,7 @@ while (chassis_busy());
 elevator_set_pos(2000);
 servo_write(2, 170);
 tmgr_delay(300);
-elevator_set_pos(5800);
+elevator_set_pos(6000);
 move_backward(20, 14, 10);
 while (chassis_busy());
 tmgr_delay(200);
@@ -394,7 +395,7 @@ tmgr_delay(300);
 
 servo_write(2, 170);
 tmgr_delay(300);
-elevator_set_pos(5800);
+elevator_set_pos(6000);
 move_backward(20, 14, 30);
 while (chassis_busy());
 tmgr_delay(200);
